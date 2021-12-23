@@ -1,0 +1,17 @@
+/*.profiles{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}*/
+.profiles img {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    margin: 0px 4px;
+    transition: border-radius 0.25s cubic-bezier(.31,0,.6,1.65);
+}
+.profiles img:hover {
+    border-radius: 8px;
+} 

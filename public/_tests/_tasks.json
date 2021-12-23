@@ -1,0 +1,25 @@
+[   {
+        "id":   1,
+        "name": "Set up a space empire",
+        "desc": "",
+        "tags": ["funsies"],
+        "done": false,
+        "due":  "May 4, 2025"
+    },
+    {
+        "id":   2,
+        "name": "Finish CVWO task",
+        "desc": "this is way more challenging than expected...",
+        "tags": ["real"],
+        "done": false,
+        "due":  "Jan 20, 2022"
+    },
+    {
+        "id":   3,
+        "name": "Take out the trash",
+        "desc": "Yup.",
+        "tags": ["funsies", "real"],
+        "done": true,
+        "due":  "Dec 25, 2021"
+    }
+] 
