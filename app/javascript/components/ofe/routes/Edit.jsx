@@ -3,7 +3,7 @@
 import React from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 
-import { Icon } from "react-materialize";
+import { Button, Icon } from "react-materialize";
 import Headerbar from "../components/Headerbar";
 import TaskEditor from "../components/TaskEditor";
 import LoadingWrapper from "../components/LoadingWrapper";
@@ -32,10 +32,9 @@ class Edit extends React.Component {
     if (this.isNewTask()) {
       this.setState({ fetchDone: true, taskDetails: undefined });
     } else {
-      const BACKEND = "/_tests/getDetails.json"
+      const BACKEND = `/api/v1/show/${this.props.taskID}`
       const authedApiOptions = {
         method: 'GET',
-        //       body: JSON.stringify({ session: "dummy", id: this.props.taskId}),
         headers: { 'Content-Type': 'application/json' }
       }
       fetch(BACKEND, authedApiOptions)
@@ -46,25 +45,48 @@ class Edit extends React.Component {
   }
 
   handleSubmit(newTask) {
-    alert(`Saving edits is not implemented yet. Fakesaving task ${JSON.stringify(newTask)} as ${this.isNewTask() ? "new" : "old"} task`);
+    alert(`Saving edits is not implemented yet. Saving task ${JSON.stringify(newTask)} as ${this.isNewTask() ? "new" : "old"} task`);
 
-    const BACKEND = "/_tests/tasks.json"
-    const endpoint = BACKEND + (this.isNewTask() ? "_create" : "_update");
+    const BACKEND = "/api/v1/tasks/" + (this.isNewTask() ? "create" : "update");
     const _Options = {
       method: 'POST',
-      body: JSON.stringify(Object.assign(
-        { session: "Dummy" },
-        newTask
-      )),
-      headers: { 'Content-Type': 'application/json' }
+      body: JSON.stringify(newTask),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+      }
     }
 
     this.setState({ fetchDone: false, taskDetails: newTask });
 
-    fetch(endpoint, _Options)
-      .then(response => response.ok ? response.json() : [])
+    fetch(BACKEND, _Options)
+      .then(response => {
+        if(response.ok) {
+          return response.json();
+        } else {
+          throw new Error("XHR response not OK");
+        }})
       .then(tasks => { this.setState({ fetchDone: true }); this.props.navigate("/"); })
-      .catch(error => { this.setState({ fetchDone: true }); alert(`*WIP* saving task - ${error.name}: ${error.message}`) });
+      .catch(error => { this.setState({ fetchDone: true }); console.log(`Saving task failed - ${error.name}: ${error.message}`) });
+  }
+  
+  handleDeleteClicked(e) {
+    const _Options = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+      }
+    }
+    fetch(`/api/v1/destroy/${this.props.taskID}`, _Options)
+      .then(response => {
+        if(response.ok) {
+          return response.json();
+        } else {
+          throw new Error("XHR response not OK")
+        }})
+      .then(tasks => { this.setState({ fetchDone: true }); this.props.navigate("/"); })
+      .catch(error => { this.setState({ fetchDone: true }); console.log(`Deleting task failed - ${error.name}: ${error.message}`) });
   }
 
   render(props) {
@@ -74,6 +96,12 @@ class Edit extends React.Component {
         <div className="container">
           <LoadingWrapper done={this.state.fetchDone}>
             <TaskEditor onSubmit={(task) => this.handleSubmit(task)} key={this.state.taskDetails} cur={this.state.taskDetails} />
+            { !this.isNewTask()
+              ? <>
+                  <p> </p> {/* Spacing */}
+                  <Button onClick={(e) => this.handleDeleteClicked(e)}>Delete this task</Button>
+                </>
+              : <></> }
           </LoadingWrapper>
         </div>
       </>

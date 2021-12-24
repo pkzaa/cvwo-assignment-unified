@@ -15,11 +15,10 @@ export default function Main(props) {
       <div className="section">
         <p><b>Warning: Logging in is currently not implemented</b></p>
         <p>Pick from one of the providers below:</p>
-        <Row>
-          <Col s={1} className="profiles"><img src="https://parnikkapore.neocities.org/media/tang.jpg" /></Col>
-          <Col s={1} className="profiles"><img src="https://parnikkapore.neocities.org/media/iweb.svg" /></Col>
-          <Col s={1} className="profiles"><img src="https://parnikkapore.neocities.org/media/scr.png" /></Col>
-        </Row>
+        <div className="profiles"><img src="https://parnikkapore.neocities.org/media/tang.jpg" />
+          <img src="https://parnikkapore.neocities.org/media/iweb.svg" />
+          <img src="https://parnikkapore.neocities.org/media/scr.png" />
+        </div>
         </div>
       </div>
     </>

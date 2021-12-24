@@ -1,10 +1,10 @@
-/*.profiles{
+.profiles{
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-}*/
+}
 .profiles img {
     width: 50px;
     height: 50px;
