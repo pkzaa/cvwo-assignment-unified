@@ -20,6 +20,10 @@ export default function Main(props) {
           <img src="https://parnikkapore.neocities.org/media/scr.png" />
         </div>
         </div>
+        <form action="/auth/developer" method="post">
+          <input type="hidden" name="authenticity_token" value={document.querySelector('[name=csrf-token]').content} />
+          <input type="submit"  />
+        </form>
       </div>
     </>
   )

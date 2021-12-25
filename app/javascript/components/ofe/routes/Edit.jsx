@@ -46,7 +46,7 @@ class Edit extends React.Component {
 
   handleSubmit(newTask) {
     // alert(`Saving edits is not implemented yet. Saving task ${JSON.stringify(newTask)} as ${this.isNewTask() ? "new" : "old"} task`);
-    const BACKEND = "/api/v1/tasks/" + (this.isNewTask() ? "create" : "update");
+    const BACKEND = "/api/v1/" + (this.isNewTask() ? "tasks/create" : `update/${this.state.taskDetails.id}`);
     const _Options = {
       method: 'POST',
       body: JSON.stringify(newTask),

@@ -22,14 +22,21 @@ class Api::V1::TasksController < ApplicationController
   end
 
   def update
-    # Doing it idiomatically doesn't work somehow. Magic!
-    @task = Task.find(params[:id])
-    
-    if @task.update(task_params)
-      render json: @task
+    task.update(task_params)
+    if task
+      render json: task
     else
-      render json: @task.errors
+      render json: task.errors
     end
+    
+    #Doing it idiomatically doesn't work somehow. Magic!
+    #@task = Task.find(params[:id])
+    
+    #if @task.update(task_params)
+      #render json: @task
+    #else
+      #render json: @task.errors
+    #end
   end
   
   def destroy
