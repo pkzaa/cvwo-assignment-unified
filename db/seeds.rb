@@ -1,18 +1,20 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
+Task.destroy_all
+
 Task.create(
     name: "Set up a space empire",
     desc: "",
     tags: ["funsies"],
-    done: true,
+    done: false,
     due:  Date.new(2025, 5, 4)
 )
 Task.create(
     name: "Finish CVWO task",
     desc: "this is way more challenging than expected...",
     tags: ["real"],
-    done: true,
+    done: false,
     due:  Date.new(2022, 1, 20)
 )
 Task.create(

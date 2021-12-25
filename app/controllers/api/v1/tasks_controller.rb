@@ -22,6 +22,7 @@ class Api::V1::TasksController < ApplicationController
   end
 
   def update
+    # Doing it idiomatically doesn't work somehow. Magic!
     @task = Task.find(params[:id])
     
     if @task.update(task_params)
@@ -39,7 +40,7 @@ class Api::V1::TasksController < ApplicationController
   private
 
   def task_params
-    params.permit(:name, :desc, :tags, :tags,  :done, :due)
+    params.permit(:name, :desc, :done, :due, tags: [])
   end
 
   def task
