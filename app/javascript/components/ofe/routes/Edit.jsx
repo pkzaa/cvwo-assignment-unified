@@ -3,7 +3,7 @@
 import React from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 
-import { Button, Icon } from "react-materialize";
+import { Button, Icon, Modal } from "react-materialize";
 import Headerbar from "../components/Headerbar";
 import TaskEditor from "../components/TaskEditor";
 import LoadingWrapper from "../components/LoadingWrapper";
@@ -46,7 +46,6 @@ class Edit extends React.Component {
 
   handleSubmit(newTask) {
     // alert(`Saving edits is not implemented yet. Saving task ${JSON.stringify(newTask)} as ${this.isNewTask() ? "new" : "old"} task`);
-    const webpack_poke = "Hello??"
     const BACKEND = "/api/v1/tasks/" + (this.isNewTask() ? "create" : "update");
     const _Options = {
       method: 'POST',
@@ -99,7 +98,25 @@ class Edit extends React.Component {
             { !this.isNewTask()
               ? <>
                   <p> </p> {/* Spacing */}
-                  <Button onClick={(e) => this.handleDeleteClicked(e)}>Delete this task</Button>
+                  <Modal
+                    actions={[
+                      <Button flat modal="close" node="button" waves="green">Cancel</Button>,
+                      <Button flat modal="close" node="button" waves="red"
+                        className="red-text text-darken-3" onClick={(e) => this.handleDeleteClicked(e)}>
+                        Delete!
+                      </Button>
+                    ]}
+                    header={`Confirm task deletion`}
+                    trigger={
+                      <Button className="red darken-3"
+                              onClick={(e) => this.handleDeleteClicked(e)}>
+                        Delete this task
+                      </Button>}
+                  >
+                    <p>
+                      Really delete this task?
+                    </p>
+                  </Modal>
                 </>
               : <></> }
           </LoadingWrapper>

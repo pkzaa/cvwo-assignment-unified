@@ -1,7 +1,7 @@
 // Task edit form
 
 import React from "react";
-import { DatePicker, TextInput, Checkbox, Button, Icon } from "react-materialize";
+import { DatePicker, TextInput, Textarea, Checkbox, Button, Icon } from "react-materialize";
 import { fallback } from "../deps/lib";
 
 export default class TaskEditor extends React.Component {
@@ -14,7 +14,7 @@ export default class TaskEditor extends React.Component {
       desc: "",
       tags: [],
       done: false,
-      due: new Date(), // now
+      due: new Date().addDays(1), // tomorrow
     });
     
     this.state.form.tags = this.state.form.tags.join();
@@ -48,7 +48,7 @@ export default class TaskEditor extends React.Component {
         <DatePicker label="Due date" onChange={(e) => this.handleChangeRaw("due", e)}
           value={this.state.form.due.toLocaleDateString("en-SG", { dateStyle: "medium" })}
           options={{ defaultDate: this.state.form.due }} />
-        <TextInput label="Description" onChange={(e) => this.handleChange("desc", e)} value={this.state.form.desc} />
+        <Textarea label="Description" onChange={(e) => this.handleChange("desc", e)} value={this.state.form.desc} />
         <Button
           node="button"
           type="submit"
