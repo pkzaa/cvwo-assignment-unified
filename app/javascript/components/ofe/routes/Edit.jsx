@@ -32,7 +32,7 @@ class Edit extends React.Component {
     if (this.isNewTask()) {
       this.setState({ fetchDone: true, taskDetails: undefined });
     } else {
-      const BACKEND = `/api/v1/show/${this.props.taskID}`
+      const BACKEND = `/api/v1/tasks/${this.props.taskID}`
       const authedApiOptions = {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
@@ -46,9 +46,9 @@ class Edit extends React.Component {
 
   handleSubmit(newTask) {
     // alert(`Saving edits is not implemented yet. Saving task ${JSON.stringify(newTask)} as ${this.isNewTask() ? "new" : "old"} task`);
-    const BACKEND = "/api/v1/" + (this.isNewTask() ? "tasks/create" : `update/${this.state.taskDetails.id}`);
+    const BACKEND = `/api/v1/tasks/${this.isNewTask() ? "" : this.state.taskDetails.id}`;
     const _Options = {
-      method: 'POST',
+      method: this.isNewTask() ? 'POST' : 'PATCH',
       body: JSON.stringify(newTask),
       headers: {
         'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ class Edit extends React.Component {
         'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
       }
     }
-    fetch(`/api/v1/destroy/${this.props.taskID}`, _Options)
+    fetch(`/api/v1/tasks/${this.props.taskID}`, _Options)
       .then(response => {
         if(response.ok) {
           return response.json();

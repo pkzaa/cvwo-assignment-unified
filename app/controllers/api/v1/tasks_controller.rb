@@ -28,15 +28,6 @@ class Api::V1::TasksController < ApplicationController
     else
       render json: task.errors
     end
-    
-    #Doing it idiomatically doesn't work somehow. Magic!
-    #@task = Task.find(params[:id])
-    
-    #if @task.update(task_params)
-      #render json: @task
-    #else
-      #render json: @task.errors
-    #end
   end
   
   def destroy

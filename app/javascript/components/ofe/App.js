@@ -28,7 +28,6 @@ export default function App() {
         <Routes>
             <Route path="/" element={<Main />} />
             <Route path="/edit/:taskID" element={<Edit />} />
-            <Route path="about" element={<About />} />
             <Route path="login" element={<Login />} />
             <Route path="logout" element={<Logout />} />
             <Route path="*" element={<Main />} />
@@ -36,31 +35,3 @@ export default function App() {
     </>
   );
 }
-
-function Home() {
-  return (
-    <>
-      <main>
-        <h2>Welcome to the homepage!</h2>
-        <p>You can do this, I believe in you.</p>
-      </main>
-      <nav>
-        <Link to="/about">About</Link>
-      </nav>
-    </>
-  );
-}
-
-const About = (props) => (
-    <>
-    <Collection>
-        <CollectionItem><Checkbox filledIn label="yes" value="yeah" /></CollectionItem>
-        <CollectionItem><Checkbox filledIn label="no"  value="nah"  /></CollectionItem>
-    </Collection>
-    <Navbar logo="CVTasks">
-            <Link to="/">Home</Link>
-            <NavSearch />
-            <NavButton>Login</NavButton>
-        </Navbar>
-    </>
-);

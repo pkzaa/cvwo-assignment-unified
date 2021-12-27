@@ -51,7 +51,7 @@ export class Main extends React.Component {
   }
 }
 
-const BACKEND = "/api/v1/tasks/index"; // "/_tests/tasks.json";
+const BACKEND = "/api/v1/tasks"; // "/_tests/tasks.json";
 const abacaba = 12345;
 
 class TaskList extends React.Component {

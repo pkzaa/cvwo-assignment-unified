@@ -35,6 +35,7 @@ export default class TaskEditor extends React.Component {
     
     const newTask = {...this.state.form};
     newTask.tags = newTask.tags.split(',');
+    newTask.due = newTask.due.toDateString();
     this.props.onSubmit(newTask);
   }
 
