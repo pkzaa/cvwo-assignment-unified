@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   post 'auth/developer',   as:"login_developer"
   
   post '/auth/:provider/callback', to: 'api/v1/logins#create'
+  post 'auth/logout',              to: 'api/v1/logins#destroy'
   
   # Unknown GET: Pass to React
   get '/*path' => 'test#index'

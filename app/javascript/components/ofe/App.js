@@ -7,7 +7,6 @@ import { Navbar, NavSearch, NavButton } from "./deps/Navbar"
 
 import Main from "./routes/Main";
 import Login from "./routes/Login";
-import Logout from "./routes/Logout";
 import Edit from "./routes/Edit";
 
 // We need these for MaterializeCSS
@@ -29,7 +28,6 @@ export default function App() {
             <Route path="/" element={<Main />} />
             <Route path="/edit/:taskID" element={<Edit />} />
             <Route path="login" element={<Login />} />
-            <Route path="logout" element={<Logout />} />
             <Route path="*" element={<Main />} />
         </Routes>
     </>

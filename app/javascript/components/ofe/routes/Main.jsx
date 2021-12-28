@@ -3,12 +3,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Collection, CollectionItem, Col, Row, Button, Icon } from "react-materialize";
+import { Collection, CollectionItem, Col, Modal, Link, Row, Button, Icon } from "react-materialize";
 // import { Navbar, NavItem, Icon } from "react-materialize";
 import { Navbar, NavSearch, NavButton } from "../deps/Navbar";
 
 import TaskEntry from "../components/TaskEntry";
 import LoadingWrapper from "../components/LoadingWrapper";
+import ErrorBox from "../components/ErrorBox";
+
+import {api} from "../deps/lib"
 
 export default function Main_wrapper(props) {
   const navigate = useNavigate();
@@ -20,11 +23,16 @@ export class Main extends React.Component {
     super(props);
     this.state = {
       searchAll: "",
+      error: undefined,
     }
   }
 
   handleSearchAllChange(value) {
     this.setState({ searchAll: value });
+  }
+  
+  handleError(error) {
+    this.setState({ error: error });
   }
 
   render(props) {
@@ -33,11 +41,13 @@ export class Main extends React.Component {
         <Navbar logo="CVTasks">
           <NavSearch onChange={(v) => this.handleSearchAllChange(v)} />
           <NavButton to="/login">Login</NavButton>
+          <LogoutButton navigate={this.props.navigate} onError={(error) => this.handleError(error)} />
         </Navbar>
         <div className="container">
           <Row>
             <Col s={12}>
-              <TaskList searchAll={this.state.searchAll} />
+              <ErrorBox error={this.state.error} />
+              <TaskList searchAll={this.state.searchAll} onError={(error) => this.handleError(error)} />
             </Col>
           </Row>
           <Button large floating
@@ -51,8 +61,39 @@ export class Main extends React.Component {
   }
 }
 
-const BACKEND = "/api/v1/tasks"; // "/_tests/tasks.json";
-const abacaba = 12345;
+function LogoutButton(props) {
+  function handleLogoutClicked(event) {
+    api(
+      `/auth/logout`,
+      'POST',
+      undefined,
+      undefined,
+      response => { console.log(["Logging out complete", response]); props.navigate("/"); },
+      () => props.onError("Logging out failed..."),
+      message => props.onError(`Logging out failed: ${message}`)
+    );
+  }
+  
+  return (
+    <Modal
+      actions={[
+        <Button flat modal="close" node="button" waves="green">Cancel</Button>,
+        <Button flat modal="close" node="button" waves="red"
+          className="red-text text-darken-3" onClick={(e) => handleLogoutClicked(e)}>
+          Log out
+        </Button>
+      ]}
+      header={`Confirm logout`}
+      trigger={
+        <Button node="a">Logout</Button>
+      }
+    >
+      <p>
+        Really log out?
+      </p>
+    </Modal>
+  )
+}
 
 class TaskList extends React.Component {
   constructor(props) {
@@ -64,15 +105,15 @@ class TaskList extends React.Component {
   }
 
   componentDidMount() {
-    const authedApiOptions = {
-      method: 'GET',
-      //       body: JSON.stringify({ session: "dummy" }),
-      headers: { 'Content-Type': 'application/json' }
-    }
-    fetch(BACKEND, authedApiOptions)
-      .then(response => response.ok ? response.json() : [])
-      .then(tasks => { this.setState({ fetchDone: true, tasks: tasks }); })
-      .catch(error => this.setState({ fetchDone: true, tasks: [`*WIP* Error fetching task list - ${error.name}: ${error.message}`] }));
+    api(
+      `/api/v1/tasks`,
+      'GET',
+      undefined,
+      () => this.setState({ fetchDone: false }),
+      tasks => { this.setState({ fetchDone: true, tasks: tasks }); },
+      () => { this.setState({ fetchDone: true }); this.props.onError("Fetching tasks failed...") },
+      message => this.props.onError(`Fetching tasks failed: ${message}`)
+    );
   }
 
   taskMatches(string) {

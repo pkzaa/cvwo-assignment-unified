@@ -7,6 +7,10 @@ import { Button, Icon, Modal } from "react-materialize";
 import Headerbar from "../components/Headerbar";
 import TaskEditor from "../components/TaskEditor";
 import LoadingWrapper from "../components/LoadingWrapper";
+import HideWrapper from "../components/HideWrapper";
+import ErrorBox from "../components/ErrorBox";
+
+import {api} from "../deps/lib"
 
 export default function Edit_wrapper(props) {
   return (
@@ -21,6 +25,7 @@ class Edit extends React.Component {
     this.state = {
       fetchDone: false,
       taskDetails: undefined,
+      error: undefined,
     };
   }
 
@@ -32,60 +37,40 @@ class Edit extends React.Component {
     if (this.isNewTask()) {
       this.setState({ fetchDone: true, taskDetails: undefined });
     } else {
-      const BACKEND = `/api/v1/tasks/${this.props.taskID}`
-      const authedApiOptions = {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      }
-      fetch(BACKEND, authedApiOptions)
-        .then(response => response.ok ? response.json() : [])
-        .then(taskDetails => { this.setState({ fetchDone: true, taskDetails: taskDetails }); })
-        .catch(error => { console.log("!b"); this.setState({ fetchDone: true, taskDetails: undefined }) });
+      api(
+        `/api/v1/tasks/${this.props.taskID}`,
+        'GET',
+        undefined,
+        undefined,
+        taskDetails => this.setState({ fetchDone: true, taskDetails: taskDetails }),
+        () => this.setState({ fetchDone: true, taskDetails: undefined, error: "Loading task failed..." }),
+        message => this.setState({ error: `Loading task failed: ${message}` })
+      );
     }
   }
 
   handleSubmit(newTask) {
-    // alert(`Saving edits is not implemented yet. Saving task ${JSON.stringify(newTask)} as ${this.isNewTask() ? "new" : "old"} task`);
-    const BACKEND = `/api/v1/tasks/${this.isNewTask() ? "" : this.state.taskDetails.id}`;
-    const _Options = {
-      method: this.isNewTask() ? 'POST' : 'PATCH',
-      body: JSON.stringify(newTask),
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-      }
-    }
-
-    this.setState({ fetchDone: false, taskDetails: newTask });
-
-    fetch(BACKEND, _Options)
-      .then(response => {
-        if(response.ok) {
-          return response.json();
-        } else {
-          throw new Error("XHR response not OK");
-        }})
-      .then(tasks => { this.setState({ fetchDone: true }); this.props.navigate("/"); })
-      .catch(error => { this.setState({ fetchDone: true }); console.log(`Saving task failed - ${error.name}: ${error.message}`) });
+    api(
+      `/api/v1/tasks/${this.isNewTask() ? "" : this.state.taskDetails.id}`,
+      this.isNewTask() ? 'POST' : 'PATCH',
+      JSON.stringify(newTask),
+      () => this.setState({ fetchDone: false, taskDetails: newTask }),
+      tasks => { this.setState({ fetchDone: true }); this.props.navigate("/"); },
+      () => this.setState({ fetchDone: true, error: "Saving task failed..." }),
+      message => this.setState({ error: `Saving task failed: ${message}` })
+    );
   }
   
   handleDeleteClicked(e) {
-    const _Options = {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-      }
-    }
-    fetch(`/api/v1/tasks/${this.props.taskID}`, _Options)
-      .then(response => {
-        if(response.ok) {
-          return response.json();
-        } else {
-          throw new Error("XHR response not OK")
-        }})
-      .then(tasks => { this.setState({ fetchDone: true }); this.props.navigate("/"); })
-      .catch(error => { this.setState({ fetchDone: true }); console.log(`Deleting task failed - ${error.name}: ${error.message}`) });
+    api(
+      `/api/v1/tasks/${this.props.taskID}`,
+      'DELETE',
+      undefined,
+      () => this.setState({ fetchDone: false }),
+      tasks => { this.props.navigate("/"); },
+      () => this.setState({ fetchDone: true, error: "Deleting task failed..." }),
+      message => this.setState({ error: `Deleting task failed: ${message}` })
+    );
   }
 
   render(props) {
@@ -93,35 +78,41 @@ class Edit extends React.Component {
       <>
         <Headerbar backButton title={this.isNewTask() ? "Add task" : "Edit task"} />
         <div className="container">
+          <ErrorBox error={this.state.error} />
           <LoadingWrapper done={this.state.fetchDone}>
-            <TaskEditor onSubmit={(task) => this.handleSubmit(task)} key={this.state.taskDetails} cur={this.state.taskDetails} />
-            { !this.isNewTask()
-              ? <>
-                  <p> </p> {/* Spacing */}
-                  <Modal
-                    actions={[
-                      <Button flat modal="close" node="button" waves="green">Cancel</Button>,
-                      <Button flat modal="close" node="button" waves="red"
-                        className="red-text text-darken-3" onClick={(e) => this.handleDeleteClicked(e)}>
-                        Delete!
-                      </Button>
-                    ]}
-                    header={`Confirm task deletion`}
-                    trigger={
-                      <Button className="red darken-3"
-                              onClick={(e) => this.handleDeleteClicked(e)}>
-                        Delete this task
-                      </Button>}
-                  >
-                    <p>
-                      Really delete this task?
-                    </p>
-                  </Modal>
-                </>
-              : <></> }
+            <HideWrapper show={!this.state.error}>
+              <TaskEditor onSubmit={(task) => this.handleSubmit(task)} key={this.state.taskDetails} cur={this.state.taskDetails} />
+              <HideWrapper show={!this.isNewTask()}>
+                <p> </p> {/* Spacing */}
+                <TaskDeleteModal onClick={(e) => this.handleDeleteClicked(e)}/>
+              </HideWrapper>
+            </HideWrapper>
           </LoadingWrapper>
         </div>
       </>
     )
   }
+}
+
+function TaskDeleteModal(props) {
+  return (
+    <Modal
+    actions={[
+      <Button flat modal="close" node="button" waves="green">Cancel</Button>,
+      <Button flat modal="close" node="button" waves="red"
+        className="red-text text-darken-3" onClick={(e) => props.onClick(e)}>
+        Delete!
+      </Button>
+    ]}
+    header={`Confirm task deletion`}
+    trigger={
+      <Button className="red darken-3">
+        Delete this task
+      </Button>}
+  >
+    <p>
+      Really delete this task?
+    </p>
+  </Modal>
+  )
 }

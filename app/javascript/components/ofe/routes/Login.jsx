@@ -20,7 +20,8 @@ export default function Main(props) {
         <div className="profiles">
           <LoginButton id="lbDev" strategy="developer" img="https://parnikkapore.neocities.org/media/tang.jpg" />
           <LoginButton id="lbGh"  strategy="github"    img="https://parnikkapore.neocities.org/media/scr.png" />
-          <LoginButton id="lbGh"  strategy="github"    img="https://parnikkapore.neocities.org/media/iweb.svg" />
+          <LoginButton id="lbX1"  strategy="github"    img="https://parnikkapore.neocities.org/media/iweb.svg" />
+          <LoginButton id="lbOut" strategy="logout"    img="https://parnikkapore.neocities.org/media/ssb.png" />
         </div>
         </div>
       </div>

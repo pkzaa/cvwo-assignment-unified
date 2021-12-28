@@ -7,7 +7,7 @@ class Api::V1::LoginsController < ApplicationController
     @user = User.fetch(auth_hash)
     
     session[:current_user_id] = @user.id
-    # self.super.current_user = @user
+    @_current_user = @user
     redirect_to '/'
   end
   

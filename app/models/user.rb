@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  has_many :tasks, dependent: :destroy
+  
   # Fetches the user associated with the auth_hash, or make a new one if it doesn't exist
   def self.fetch(auth_hash)
     our_user = self.find_by(provider: auth_hash.provider, uid: auth_hash.uid)
