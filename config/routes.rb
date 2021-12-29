@@ -12,8 +12,11 @@ Rails.application.routes.draw do
   end
   
   # Auth
-  post 'auth/developer',   as:"login_developer"
+  post 'auth/developer', as:"login_developer"
+  post 'auth/github',    as:"login_github"
+  post 'auth/indieauth', as:"login_indieauth"
   
+  get '/auth/:provider/callback', to: 'api/v1/logins#create'
   post '/auth/:provider/callback', to: 'api/v1/logins#create'
   post 'auth/logout',              to: 'api/v1/logins#destroy'
   

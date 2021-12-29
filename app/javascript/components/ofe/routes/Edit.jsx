@@ -25,7 +25,7 @@ class Edit extends React.Component {
     this.state = {
       fetchDone: false,
       taskDetails: undefined,
-      error: undefined,
+      taskError: undefined,
     };
   }
 
@@ -43,8 +43,8 @@ class Edit extends React.Component {
         undefined,
         undefined,
         taskDetails => this.setState({ fetchDone: true, taskDetails: taskDetails }),
-        () => this.setState({ fetchDone: true, taskDetails: undefined, error: "Loading task failed..." }),
-        message => this.setState({ error: `Loading task failed: ${message}` })
+        () => this.setState({ fetchDone: true, taskDetails: undefined, taskError: "Loading task failed..." }),
+        message => this.setState({ taskError: `Loading task failed: ${message}` })
       );
     }
   }
@@ -55,9 +55,9 @@ class Edit extends React.Component {
       this.isNewTask() ? 'POST' : 'PATCH',
       JSON.stringify(newTask),
       () => this.setState({ fetchDone: false, taskDetails: newTask }),
-      tasks => { this.setState({ fetchDone: true }); this.props.navigate("/"); },
-      () => this.setState({ fetchDone: true, error: "Saving task failed..." }),
-      message => this.setState({ error: `Saving task failed: ${message}` })
+      tasks => this.props.navigate("/"),
+      () => { this.setState({ fetchDone: true }); console.log("Saving task failed..."); },
+      message => M.toast({html: `Saving task failed: ${message}` })
     );
   }
   
@@ -66,10 +66,10 @@ class Edit extends React.Component {
       `/api/v1/tasks/${this.props.taskID}`,
       'DELETE',
       undefined,
-      () => this.setState({ fetchDone: false }),
+      () => this.setState({ fetchDone: false, taskDetails: this.state.taskDetails }),
       tasks => { this.props.navigate("/"); },
-      () => this.setState({ fetchDone: true, error: "Deleting task failed..." }),
-      message => this.setState({ error: `Deleting task failed: ${message}` })
+      () => { this.setState({ fetchDone: true }); console.log("Deleting task failed..."); },
+      message => M.toast({html: `Deleting task failed: ${message}` })
     );
   }
 
@@ -78,9 +78,9 @@ class Edit extends React.Component {
       <>
         <Headerbar backButton title={this.isNewTask() ? "Add task" : "Edit task"} />
         <div className="container">
-          <ErrorBox error={this.state.error} />
           <LoadingWrapper done={this.state.fetchDone}>
-            <HideWrapper show={!this.state.error}>
+            <ErrorBox error={this.state.taskError} />
+            <HideWrapper show={!this.state.taskError}>
               <TaskEditor onSubmit={(task) => this.handleSubmit(task)} key={this.state.taskDetails} cur={this.state.taskDetails} />
               <HideWrapper show={!this.isNewTask()}>
                 <p> </p> {/* Spacing */}

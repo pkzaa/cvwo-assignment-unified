@@ -7,6 +7,10 @@ import { Collection, CollectionItem, Col, Row, Icon} from "react-materialize";
 import Headerbar from "../components/Headerbar";
 import LoginButton from "../components/LoginButton";
 
+import devIcon from "./login_provider_icons/dev.png";
+import ghIcon from "./login_provider_icons/github.png";
+const iauthIcon = "https://parnikkapore.neocities.org/media/iweb.svg";
+
 import "./Login.css";
 
 export default function Main(props) {
@@ -14,15 +18,13 @@ export default function Main(props) {
     <>
       <Headerbar backButton title="Login" />
       <div className="container">
-      <div className="section">
-        <p><b>Warning: Logging in is currently not implemented</b></p>
-        <p>Pick from one of the providers below:</p>
-        <div className="profiles">
-          <LoginButton id="lbDev" strategy="developer" img="https://parnikkapore.neocities.org/media/tang.jpg" />
-          <LoginButton id="lbGh"  strategy="github"    img="https://parnikkapore.neocities.org/media/scr.png" />
-          <LoginButton id="lbX1"  strategy="github"    img="https://parnikkapore.neocities.org/media/iweb.svg" />
-          <LoginButton id="lbOut" strategy="logout"    img="https://parnikkapore.neocities.org/media/ssb.png" />
-        </div>
+        <div className="section">
+          <p>Pick from one of the providers below:</p>
+          <div className="profiles">
+            <LoginButton id="lbDev" name="Developer" strategy="developer" img={devIcon}   />
+            <LoginButton id="lbGh"  name="GitHub"    strategy="github"    img={ghIcon}    />
+            <LoginButton id="lbX1"  name="IndieAuth" strategy="indieauth" img={iauthIcon} />
+          </div>
         </div>
       </div>
     </>

@@ -9,13 +9,14 @@ import { Navbar, NavSearch, NavButton } from "../deps/Navbar";
 
 import TaskEntry from "../components/TaskEntry";
 import LoadingWrapper from "../components/LoadingWrapper";
+import HideWrapper from "../components/HideWrapper";
 import ErrorBox from "../components/ErrorBox";
 
-import {api} from "../deps/lib"
+import { api } from "../deps/lib"
 
 export default function Main_wrapper(props) {
   const navigate = useNavigate();
-  return (<Main navigate={navigate} />);
+  return (<Main navigate={navigate} userID={props.userID} />);
 }
 
 export class Main extends React.Component {
@@ -35,18 +36,19 @@ export class Main extends React.Component {
     this.setState({ error: error });
   }
 
-  render(props) {
+  render() {
     return (
       <>
         <Navbar logo="CVTasks">
           <NavSearch onChange={(v) => this.handleSearchAllChange(v)} />
-          <NavButton to="/login">Login</NavButton>
-          <LogoutButton navigate={this.props.navigate} onError={(error) => this.handleError(error)} />
+          { this.props.userID // === null
+            ? <LogoutButton navigate={this.props.navigate} onError={(error) => this.handleError(error)} />
+            : <NavButton to="/login">Login</NavButton>
+          }
         </Navbar>
         <div className="container">
           <Row>
             <Col s={12}>
-              <ErrorBox error={this.state.error} />
               <TaskList searchAll={this.state.searchAll} onError={(error) => this.handleError(error)} />
             </Col>
           </Row>
@@ -68,9 +70,9 @@ function LogoutButton(props) {
       'POST',
       undefined,
       undefined,
-      response => { console.log(["Logging out complete", response]); props.navigate("/"); },
-      () => props.onError("Logging out failed..."),
-      message => props.onError(`Logging out failed: ${message}`)
+      response => { console.log(["Logging out complete", response]); window.location.reload(); },
+      () => console.log("Logging out failed..."),
+      message => M.toast({html: `<p>Logging out failed: ${message}</p>`})
     );
   }
   
@@ -101,6 +103,7 @@ class TaskList extends React.Component {
     this.state = {
       fetchDone: false,
       tasks: [],
+      error: undefined,
     }
   }
 
@@ -110,9 +113,9 @@ class TaskList extends React.Component {
       'GET',
       undefined,
       () => this.setState({ fetchDone: false }),
-      tasks => { this.setState({ fetchDone: true, tasks: tasks }); },
-      () => { this.setState({ fetchDone: true }); this.props.onError("Fetching tasks failed...") },
-      message => this.props.onError(`Fetching tasks failed: ${message}`)
+      tasks => this.setState({ fetchDone: true, tasks: tasks }),
+      () => this.setState({ fetchDone: true, error: "Fetching tasks failed..." }),
+      message => this.setState({error: `Fetching tasks failed: ${message}`})
     );
   }
 
@@ -129,11 +132,14 @@ class TaskList extends React.Component {
     const tasks = this.state.tasks.filter(this.taskMatches(this.props.searchAll));
     return (
       <LoadingWrapper done={this.state.fetchDone}>
+        <ErrorBox error={this.state.error} />
+        <HideWrapper show={!this.state.error}>
         <Collection>
           {tasks.map(
             (v, i) => <TaskEntry key={v.id} id={v.id}>{v.name}</TaskEntry>)
           }
         </Collection>
+        </HideWrapper>
       </LoadingWrapper>
     )
   }

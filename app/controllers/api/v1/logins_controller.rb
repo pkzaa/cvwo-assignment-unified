@@ -17,7 +17,7 @@ class Api::V1::LoginsController < ApplicationController
     session.delete(:current_user_id)
     # Clear the memoized current user
     @_current_user = nil
-    redirect_to root_url
+    render json: { message: "Logout successful!" }, status: :ok
   end
 
   protected

@@ -21,11 +21,11 @@ import "./App.css";
  * https://react-materialize.github.io
  */
 
-export default function App() {
+export default function App(props) {
   return (
     <>
         <Routes>
-            <Route path="/" element={<Main />} />
+            <Route path="/" element={<Main userID={props.userID} />} />
             <Route path="/edit/:taskID" element={<Edit />} />
             <Route path="login" element={<Login />} />
             <Route path="*" element={<Main />} />

@@ -9,11 +9,15 @@ class Entry extends React.Component {
     return (
       <React.Fragment>
         <BrowserRouter>
-            <App />
+            <App userID={this.props.userID}/>
         </BrowserRouter>
       </React.Fragment>
     );
   }
 }
 
-export default Entry
+Entry.propTypes = {
+  userID: PropTypes.number
+};
+
+export default Entry;
