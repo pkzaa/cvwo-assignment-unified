@@ -57,11 +57,15 @@ export default class TaskEditor extends React.Component {
       <form onSubmit={this.handleSubmit}>
         <TextInput label="Name" name="name" onChange={this.handleChange} value={this.state.form.name} />
         <Chip
+          closeIcon={<Icon>close</Icon>}
           options={{
             data: this.state.form.tags.map((tag) => ({tag: tag})),
             onChipAdd: this.handleTagsChange,
             onChipDelete: this.handleTagsChange,
+            placeholder: 'Tags',
+            secondaryPlaceholder: '+ More tags...'
           }}
+          
         />
         <Checkbox label="Done" onChange={this.handleDoneChecked} checked={this.state.form.done}
           value="Done" filledIn />
