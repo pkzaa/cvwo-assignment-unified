@@ -22,6 +22,10 @@ class Edit extends React.Component {
 
   constructor(props) {
     super(props);
+    
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDeleteClicked = this.handleDeleteClicked.bind(this);
+    
     this.state = {
       fetchDone: false,
       taskDetails: undefined,
@@ -51,7 +55,7 @@ class Edit extends React.Component {
 
   handleSubmit(newTask) {
     api(
-      `/api/v1/tasks/${this.isNewTask() ? "" : this.state.taskDetails.id}`,
+      `/api/v1/tasks/${this.isNewTask() ? "" : this.props.taskID}`,
       this.isNewTask() ? 'POST' : 'PATCH',
       JSON.stringify(newTask),
       () => this.setState({ fetchDone: false, taskDetails: newTask }),
@@ -81,10 +85,12 @@ class Edit extends React.Component {
           <LoadingWrapper done={this.state.fetchDone}>
             <ErrorBox error={this.state.taskError} />
             <HideWrapper show={!this.state.taskError}>
-              <TaskEditor onSubmit={(task) => this.handleSubmit(task)} key={this.state.taskDetails} cur={this.state.taskDetails} />
+              <TaskEditor key={this.state.taskDetails ? this.state.taskDetails.id : null}
+                cur={this.state.taskDetails}
+                onSubmit={this.handleSubmit} />
               <HideWrapper show={!this.isNewTask()}>
                 <p> </p> {/* Spacing */}
-                <TaskDeleteModal onClick={(e) => this.handleDeleteClicked(e)}/>
+                <TaskDeleteModal onClick={this.handleDeleteClicked}/>
               </HideWrapper>
             </HideWrapper>
           </LoadingWrapper>

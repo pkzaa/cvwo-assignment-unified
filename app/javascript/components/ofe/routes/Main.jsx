@@ -22,6 +22,10 @@ export default function Main_wrapper(props) {
 export class Main extends React.Component {
   constructor(props) {
     super(props);
+    
+    this.handleSearchAllChange = this.handleSearchAllChange.bind(this);
+    this.handleError = this.handleError.bind(this);
+    
     this.state = {
       searchAll: "",
       error: undefined,
@@ -42,14 +46,14 @@ export class Main extends React.Component {
         <Navbar logo="CVTasks">
           <NavSearch onChange={(v) => this.handleSearchAllChange(v)} />
           { this.props.userID // === null
-            ? <LogoutButton navigate={this.props.navigate} onError={(error) => this.handleError(error)} />
+            ? <LogoutButton navigate={this.props.navigate} onError={this.handleError} />
             : <NavButton to="/login">Login</NavButton>
           }
         </Navbar>
         <div className="container">
           <Row>
             <Col s={12}>
-              <TaskList searchAll={this.state.searchAll} onError={(error) => this.handleError(error)} />
+              <TaskList searchAll={this.state.searchAll} onError={this.handleError} />
             </Col>
           </Row>
           <Button large floating
