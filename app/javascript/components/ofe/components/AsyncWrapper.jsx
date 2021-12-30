@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Preloader, Row, Col } from "react-materialize";
+import ErrorBox from "./ErrorBox";
 
 export default function AsyncWrapper(props) {
   return !props.done
