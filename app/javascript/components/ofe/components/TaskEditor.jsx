@@ -1,8 +1,8 @@
 // Task edit form
 
 import React from "react";
-import { DatePicker, TextInput, Textarea, Checkbox, Button, Icon } from "react-materialize";
-import { fallback } from "../deps/lib";
+import { DatePicker, TextInput, Textarea, Checkbox, Button, Icon, Chip } from "react-materialize";
+import { fallback, cdump } from "../deps/lib";
 
 export default class TaskEditor extends React.Component {
   constructor(props) {
@@ -10,6 +10,7 @@ export default class TaskEditor extends React.Component {
     
     this.handleChange = this.handleChange.bind(this);
     this.handleDoneChecked = this.handleDoneChecked.bind(this);
+    this.handleTagsChange = this.#handleTagsChange(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     
     const defaults = props.cur !== undefined
@@ -22,7 +23,6 @@ export default class TaskEditor extends React.Component {
         due: new Date().addDays(1), // tomorrow
       };
     
-    defaults.tags = defaults.tags.join();
     defaults.due = new Date(defaults.due);
     
     this.state = { form: defaults };
@@ -39,11 +39,15 @@ export default class TaskEditor extends React.Component {
   handleDoneChecked(event) {
     this.handleChangeRaw("done", event.target.checked);
   }
+  #handleTagsChange(_taskEditor) {
+    return function(chips,chip) {
+      _taskEditor.handleChangeRaw("tags", this.chipsData.map((chipData) => chipData.tag));
+    }
+  }
   handleSubmit(event) {
     event.preventDefault();
     
     const newTask = {...this.state.form};
-    newTask.tags = newTask.tags.split(',');
     newTask.due = newTask.due.toDateString();
     this.props.onSubmit(newTask);
   }
@@ -52,7 +56,13 @@ export default class TaskEditor extends React.Component {
     return (
       <form onSubmit={this.handleSubmit}>
         <TextInput label="Name" name="name" onChange={this.handleChange} value={this.state.form.name} />
-        <TextInput label="Tags" name="tags" onChange={this.handleChange} value={this.state.form.tags} />
+        <Chip
+          options={{
+            data: this.state.form.tags.map((tag) => ({tag: tag})),
+            onChipAdd: this.handleTagsChange,
+            onChipDelete: this.handleTagsChange,
+          }}
+        />
         <Checkbox label="Done" onChange={this.handleDoneChecked} checked={this.state.form.done}
           value="Done" filledIn />
         <DatePicker label="Due date" onChange={(e) => this.handleChangeRaw("due", e)}

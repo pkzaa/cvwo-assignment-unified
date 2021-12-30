@@ -11,6 +11,11 @@ Date.prototype.addDays = function(days) {
     return date;
 }
 
+// returns a function that reports whatever arguments it receives to the console
+export function cdump(identifier) {
+  return (...args) => console.log([`cdump ${identifier}`, args]);
+}
+
 export function api(endpoint, method='GET', body, fPrefetch=()=>{}, fSuccess=()=>{}, fFailure=()=>{}, fErrorMessage=()=>{}) {
   const fetchOptions = {
     method: method,
