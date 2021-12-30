@@ -8,9 +8,7 @@ import { Collection, CollectionItem, Col, Modal, Link, Row, Button, Icon } from 
 import { Navbar, NavSearch, NavButton } from "../deps/Navbar";
 
 import TaskEntry from "../components/TaskEntry";
-import LoadingWrapper from "../components/LoadingWrapper";
-import HideWrapper from "../components/HideWrapper";
-import ErrorBox from "../components/ErrorBox";
+import AsyncWrapper from "../components/AsyncWrapper";
 
 import { api } from "../deps/lib"
 
@@ -139,16 +137,13 @@ class TaskList extends React.Component {
   render(props) {
     const tasks = this.state.tasks.filter(this.taskMatches(this.props.searchAll));
     return (
-      <LoadingWrapper done={this.state.fetchDone}>
-        <ErrorBox error={this.state.error} />
-        <HideWrapper show={!this.state.error}>
+      <AsyncWrapper done={this.state.fetchDone} error={this.state.error}>
         <Collection>
           {tasks.map(
             (v, i) => <TaskEntry key={v.id} id={v.id}>{v.name}</TaskEntry>)
           }
         </Collection>
-        </HideWrapper>
-      </LoadingWrapper>
+      </AsyncWrapper>
     )
   }
 }

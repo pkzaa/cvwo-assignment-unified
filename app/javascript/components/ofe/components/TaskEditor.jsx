@@ -22,7 +22,6 @@ export default class TaskEditor extends React.Component {
         due: new Date().addDays(1), // tomorrow
       };
     
-    console.log([props.cur, defaults]);
     defaults.tags = defaults.tags.join();
     defaults.due = new Date(defaults.due);
     

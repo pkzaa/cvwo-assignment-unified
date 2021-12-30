@@ -6,9 +6,8 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button, Icon, Modal } from "react-materialize";
 import Headerbar from "../components/Headerbar";
 import TaskEditor from "../components/TaskEditor";
-import LoadingWrapper from "../components/LoadingWrapper";
+import AsyncWrapper from "../components/AsyncWrapper";
 import HideWrapper from "../components/HideWrapper";
-import ErrorBox from "../components/ErrorBox";
 
 import {api} from "../deps/lib"
 
@@ -84,18 +83,15 @@ class Edit extends React.Component {
       <>
         <Headerbar backButton title={this.isNewTask() ? "Add task" : "Edit task"} />
         <div className="container">
-          <LoadingWrapper done={this.state.fetchDone}>
-            <ErrorBox error={this.state.taskError} />
-            <HideWrapper show={!this.state.taskError}>
-              <TaskEditor key={this.state.taskDetails ? this.state.taskDetails.id : null}
-                cur={this.state.taskDetails}
-                onSubmit={this.handleSubmit} />
-              <HideWrapper show={!this.isNewTask()}>
-                <p> </p> {/* Spacing */}
-                <TaskDeleteModal onClick={this.handleDeleteClicked}/>
-              </HideWrapper>
+          <AsyncWrapper done={this.state.fetchDone} error={this.state.taskError}>
+            <TaskEditor key={this.state.taskDetails ? this.state.taskDetails.id : null}
+              cur={this.state.taskDetails}
+              onSubmit={this.handleSubmit} />
+            <HideWrapper show={!this.isNewTask()}>
+              <p> </p> {/* Spacing */}
+              <TaskDeleteModal onClick={this.handleDeleteClicked}/>
             </HideWrapper>
-          </LoadingWrapper>
+          </AsyncWrapper>
         </div>
       </>
     )
