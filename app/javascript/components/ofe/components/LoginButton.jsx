@@ -7,6 +7,8 @@ import "./LoginButton.css";
 export default class LoginButton extends React.Component {
   constructor(props) {
     super(props);
+    
+    this.handleClick = this.handleClick.bind(this);
   }
   
   handleClick(event) {
@@ -19,7 +21,7 @@ export default class LoginButton extends React.Component {
     return (
       <form id={this.props.id} action={`/auth/${this.props.strategy}`} method="post">
         <input type="hidden" name="authenticity_token" value={document.querySelector('[name=csrf-token]').content} />
-        <a className="login-button" onClick={(e) => this.handleClick(e)}>
+        <a className="login-button" onClick={this.handleClick}>
           <img src={this.props.img} />
         </a>  
       </form>

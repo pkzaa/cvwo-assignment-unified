@@ -13,9 +13,9 @@ const iauthIcon = "https://parnikkapore.neocities.org/media/iweb.svg";
 
 import "./Login.css";
 
-export default function Main(props) {
+export default function Login(props) {
   return (
-    <>
+    <React.StrictMode>
       <Headerbar backButton title="Login" />
       <div className="container">
         <div className="section">
@@ -27,6 +27,6 @@ export default function Main(props) {
           </div>
         </div>
       </div>
-    </>
+    </React.StrictMode>
   )
 };

@@ -16,7 +16,11 @@ import { api } from "../deps/lib"
 
 export default function Main_wrapper(props) {
   const navigate = useNavigate();
-  return (<Main navigate={navigate} userID={props.userID} />);
+  return (
+    <React.StrictMode>
+      <Main navigate={navigate} userID={props.userID} />
+    </React.StrictMode>
+  );
 }
 
 export class Main extends React.Component {

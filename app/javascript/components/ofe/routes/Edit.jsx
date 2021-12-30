@@ -14,7 +14,9 @@ import {api} from "../deps/lib"
 
 export default function Edit_wrapper(props) {
   return (
-    <Edit taskID={useParams().taskID} navigate={useNavigate()} />
+    <React.StrictMode>
+      <Edit taskID={useParams().taskID} navigate={useNavigate()} />
+    </React.StrictMode>
   )
 }
 
