@@ -1,0 +1,14 @@
+#main-root {
+    display: grid;
+    grid-template:  ".    sort" auto
+                    "list list" 1fr
+                /    1fr auto;
+}
+
+#sort-chooser {
+    grid-area: sort;
+}
+
+#task-list {
+    grid-area: list;
+}

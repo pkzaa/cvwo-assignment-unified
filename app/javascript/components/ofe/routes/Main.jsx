@@ -3,14 +3,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Collection, CollectionItem, Col, Modal, Link, Row, Button, Icon } from "react-materialize";
+import { Collection, CollectionItem, Col, Modal, Link, Row, Button, Icon, Dropdown } from "react-materialize";
 // import { Navbar, NavItem, Icon } from "react-materialize";
 import { Navbar, NavSearch, NavButton } from "../deps/Navbar";
-
 import TaskEntry from "../components/TaskEntry";
 import AsyncWrapper from "../components/AsyncWrapper";
+import { api, fallback } from "../deps/lib"
 
-import { api } from "../deps/lib"
+import "./Main.css";
 
 export default function Main_wrapper(props) {
   const navigate = useNavigate();
@@ -21,16 +21,30 @@ export default function Main_wrapper(props) {
   );
 }
 
+const sortNames = {
+  created:  "Sort by date added",
+  due:      "Sort by deadline",
+  name:     "Sort by name",
+}
+
+const sortFns = {
+  created:  (a,b) => 0,
+  due:      (a,b) => new Date(a.due).getTime() - new Date(b.due).getTime(),
+  name:     (a,b) => a.name.localeCompare(b.name),
+}
+
 export class Main extends React.Component {
   constructor(props) {
     super(props);
     
     this.handleSearchAllChange = this.handleSearchAllChange.bind(this);
     this.handleError = this.handleError.bind(this);
+    this.handleSortChange = this.handleSortChange.bind(this);
     
     this.state = {
       searchAll: "",
       error: undefined,
+      sortBy: fallback(window.localStorage.getItem("taskSortBy"), "created"),
     }
   }
 
@@ -41,12 +55,20 @@ export class Main extends React.Component {
   handleError(error) {
     this.setState({ error: error });
   }
+  
+  handleSortChange(event) {
+    event.preventDefault();
+    
+    const newSortBy = event.target.getAttribute("value");
+    window.localStorage.setItem("taskSortBy", newSortBy);
+    this.setState({sortBy: newSortBy});
+  }
 
   render() {
     return (
       <>
         <Navbar logo="CVTasks">
-          <NavSearch onChange={(v) => this.handleSearchAllChange(v)} />
+          <NavSearch onChange={this.handleSearchAllChange} />
           { this.props.userID // === null
             ? <LogoutButton navigate={this.props.navigate} onError={this.handleError} />
             : <NavButton to="/login">Login</NavButton>
@@ -54,15 +76,18 @@ export class Main extends React.Component {
         </Navbar>
         <div className="container">
           <Row>
-            <Col s={12}>
-              <TaskList searchAll={this.state.searchAll} onError={this.handleError} />
-            </Col>
-          </Row>
+          <Col s={12} id="main-root">
+          <SortChooser id="sort-chooser" className="right" value={this.state.sortBy} onChange={this.handleSortChange} />
+            <div id="task-list">
+              <TaskList searchAll={this.state.searchAll} sortBy={this.state.sortBy} onError={this.handleError} />
+            </div>
           <Button large floating
             className="red fixed-action-btn"
             icon={<Icon>add</Icon>}
             onClick={() => this.props.navigate("/edit/new")}
           />
+          </Col>
+          </Row>
         </div>
       </>
     )
@@ -134,16 +159,34 @@ class TaskList extends React.Component {
     )
   }
 
-  render(props) {
-    const tasks = this.state.tasks.filter(this.taskMatches(this.props.searchAll));
+  render() {
+    const tasks = this.state.tasks.filter(this.taskMatches(this.props.searchAll)).sort(sortFns[this.props.sortBy]);
     return (
       <AsyncWrapper done={this.state.fetchDone} error={this.state.error}>
         <Collection>
           {tasks.map(
-            (v, i) => <TaskEntry key={v.id} id={v.id}>{v.name}</TaskEntry>)
+            (v, i) => <TaskEntry key={v.id} task={v} />)
           }
         </Collection>
       </AsyncWrapper>
     )
   }
+}
+
+function SortChooser(props) {
+  return (
+    <Dropdown
+      id="sort-chooser-body"
+      trigger={
+        <Button flat waves="light" node="button" className={props.className} id={props.id}>
+          {sortNames[props.value].replaceAll("Sort", "Sorted")}
+          <Icon right>sort</Icon>
+        </Button>}
+    >
+    {Array.from(Object.entries(sortNames),
+      ([id, name]) =>
+        <a key={id} value={id} onClick={props.onChange} href="#">{name}</a>
+    )}
+    </Dropdown>
+  )
 }

@@ -1,7 +1,7 @@
 // Miscellaneous helper functions
 
 export function fallback(value, fallbackValue) {
-  return value !== undefined ? value : fallbackValue
+  return (value !== undefined && value !== null) ? value : fallbackValue
 }
 
 // This *really* should be specified by ECMA...
