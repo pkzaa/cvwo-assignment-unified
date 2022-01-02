@@ -5,6 +5,10 @@
 
 import Rails from "@rails/ujs"
 import Turbolinks from "turbolinks"
+//= require react
+//= require react_ujs
+//= require components
+
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 
