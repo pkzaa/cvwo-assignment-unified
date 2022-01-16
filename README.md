@@ -1,24 +1,30 @@
-# README
+# CVTasks
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A basic task / homework management Rails + React app, using a JSON RESTful API... for the most part.
 
-Things you may want to cover:
+*(The reason it drifted away from full RESTful is that I need to ues OmniAuth for OAuth, which can't operate in a REST setting for reasons that should be obvious.)*
 
-* Ruby version
+## Installing
 
-* System dependencies
+You need:
 
-* Configuration
+* Ruby 2.7.0, which comes with Ubuntu 20.04 LTS
+* A reasonably modern version of NodeJS
+* postgresql
 
-* Database creation
+Steps to install:
 
-* Database initialization
+1. Install Ruby dependencies: `bundle install`.
+2. Install Node dependencies: `npm install react react-dom react-materialize materialize-css@next react-router-dom@6`
+3. Set up a PostgreSQL role. The username must be "cvtasks".
+4. Copy config/application.yml.example to config/application.yml.example and change as needed.
+5. Run database migrations: `rake db:create && rake db:migrate`
+6. Start and enjoy
 
-* How to run the test suite
+## Running
 
-* Services (job queues, cache servers, search engines, etc.)
+For the full Rails development environment, use `rails s`.
 
-* Deployment instructions
+For a production server, use `RAILS_SERVE_STATIC_FILES=t rails s -e production`.
 
-* ...
+**Bleeding-edge Node users:** `export NODE_OPTIONS=--openssl-legacy-provider` so that Webpacker will work properly!

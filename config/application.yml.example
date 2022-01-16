@@ -1,0 +1,6 @@
+# Add configuration values here, as shown below.
+
+GITHUB_KEY: 0000
+GITHUB_SECRET: 0000
+
+POSTGRESQL_PASSWORD: 0000
