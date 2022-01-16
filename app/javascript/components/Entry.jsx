@@ -9,7 +9,7 @@ class Entry extends React.Component {
     return (
       <React.Fragment>
         <BrowserRouter>
-            <App userID={this.props.userID}/>
+            <App userID={this.props.userID} mode={this.props.mode} />
         </BrowserRouter>
       </React.Fragment>
     );

@@ -21,9 +21,8 @@ export default function Login(props) {
         <div className="section">
           <p>Pick from one of the providers below:</p>
           <div className="profiles">
-            <LoginButton id="lbDev" name="Developer" strategy="developer" img={devIcon}   />
+            { props.mode=="development" ? <LoginButton id="lbDev" name="Developer" strategy="developer" img={devIcon}   /> : <></> }
             <LoginButton id="lbGh"  name="GitHub"    strategy="github"    img={ghIcon}    />
-            <LoginButton id="lbX1"  name="IndieAuth" strategy="indieauth" img={iauthIcon} />
           </div>
         </div>
       </div>

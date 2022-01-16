@@ -1,1 +1,1 @@
-<%= react_component("Entry", {userID: session[:current_user_id] }) %>
+<%= react_component("Entry", {userID: session[:current_user_id], mode: Rails.env}) %>
