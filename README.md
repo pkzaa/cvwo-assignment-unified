@@ -17,7 +17,7 @@ Steps to install:
 1. Install Ruby dependencies: `bundle install`.
 2. Install Node dependencies: `npm install react react-dom react-materialize materialize-css@next react-router-dom@6`
 3. Set up a PostgreSQL role. The username must be "cvtasks".
-4. Copy config/application.yml.example to config/application.yml.example and change as needed.
+4. Copy config/application.yml.example to config/application.yml and replace the placeholders with your own correct values
 5. Run database migrations: `rake db:create && rake db:migrate`
 6. Start and enjoy
 
