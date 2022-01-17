@@ -22,7 +22,7 @@ export default class LoginButton extends React.Component {
       <form id={this.props.id} action={`/auth/${this.props.strategy}`} method="post">
         <input type="hidden" name="authenticity_token" value={document.querySelector('[name=csrf-token]').content} />
         <a className="login-button" onClick={this.handleClick}>
-          <img src={this.props.img} />
+          <img src={this.props.img} title={this.props.name} alt={this.props.name}/>
         </a>  
       </form>
     )
