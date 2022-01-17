@@ -60,5 +60,6 @@ gem 'react-rails'
 gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-github'
 # gem 'omniauth-indieauth' # broke Spring :(
+gem 'omniauth-heroku'
 
 gem 'figaro'

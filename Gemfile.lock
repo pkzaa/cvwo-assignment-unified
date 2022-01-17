@@ -152,6 +152,9 @@ GEM
     omniauth-github (2.0.0)
       omniauth (~> 2.0)
       omniauth-oauth2 (~> 1.7.1)
+    omniauth-heroku (1.0.0)
+      omniauth (>= 1.9, < 3)
+      omniauth-oauth2 (~> 1.7)
     omniauth-oauth2 (1.7.2)
       oauth2 (~> 1.4)
       omniauth (>= 1.9, < 3)
@@ -274,6 +277,7 @@ DEPENDENCIES
   jbuilder (~> 2.7)
   listen (~> 3.3)
   omniauth-github
+  omniauth-heroku
   omniauth-rails_csrf_protection
   pg
   puma (~> 5.0)

@@ -9,7 +9,7 @@ class Entry extends React.Component {
     return (
       <React.Fragment>
         <BrowserRouter>
-            <App userID={this.props.userID} mode={this.props.mode} />
+            <App loggedIn={this.props.loggedIn} mode={this.props.mode} />
         </BrowserRouter>
       </React.Fragment>
     );
@@ -17,7 +17,7 @@ class Entry extends React.Component {
 }
 
 Entry.propTypes = {
-  userID: PropTypes.number
+  loggedIn: PropTypes.bool
 };
 
 export default Entry;

@@ -23,6 +23,7 @@ export default function Login(props) {
           <div className="profiles">
             { props.mode=="development" ? <LoginButton id="lbDev" name="Developer" strategy="developer" img={devIcon}   /> : <></> }
             <LoginButton id="lbGh"  name="GitHub"    strategy="github"    img={ghIcon}    />
+            <LoginButton id="lbHku" name="Heroku"    strategy="heroku"    img={iauthIcon}    />
           </div>
         </div>
       </div>

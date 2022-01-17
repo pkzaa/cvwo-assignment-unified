@@ -1,1 +1,1 @@
-<%= react_component("Entry", {userID: session[:current_user_id], mode: Rails.env}) %>
+<%= react_component("Entry", {loggedIn: !session[:current_user_id].nil?, mode: Rails.env}) %>

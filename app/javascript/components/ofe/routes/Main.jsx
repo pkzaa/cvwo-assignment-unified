@@ -16,7 +16,7 @@ export default function Main_wrapper(props) {
   const navigate = useNavigate();
   return (
     <React.StrictMode>
-      <Main navigate={navigate} userID={props.userID} />
+      <Main navigate={navigate} loggedIn={props.loggedIn} />
     </React.StrictMode>
   );
 }
@@ -69,7 +69,7 @@ export class Main extends React.Component {
       <>
         <Navbar logo="CVTasks">
           <NavSearch onChange={this.handleSearchAllChange} />
-          { this.props.userID // === null
+          { this.props.loggedIn
             ? <LogoutButton navigate={this.props.navigate} onError={this.handleError} />
             : <NavButton to="/login">Login</NavButton>
           }
