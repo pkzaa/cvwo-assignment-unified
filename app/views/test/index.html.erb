@@ -1,1 +1,14 @@
+<noscript>
+    <div style="
+        margin: 8px;
+        padding: 8px;
+        display: block;
+        background-color: #CEEDFF;
+        border: 2px dashed #0076ba;
+        color: #004D7B;"
+    >
+        You need to enable JavaScript to run this app.
+    </div>
+</noscript>
+
 <%= react_component("Entry", {loggedIn: !session[:current_user_id].nil?, mode: Rails.env}) %>
