@@ -28,7 +28,7 @@ export default function App(props) {
             <Route path="/" element={<Main loggedIn={props.loggedIn} />} />
             <Route path="/edit/:taskID" element={<Edit />} />
             <Route path="login" element={<Login mode={props.mode} />} />
-            <Route path="*" element={<Main />} />
+            <Route path="*" element={<Main loggedIn={props.loggedIn} />} />
         </Routes>
     </>
   );
