@@ -28,3 +28,7 @@ For the full Rails development environment, use `rails s`.
 For a production server, use `RAILS_SERVE_STATIC_FILES=t rails s -e production`.
 
 **Bleeding-edge Node users:** `export NODE_OPTIONS=--openssl-legacy-provider` so that Webpacker will work properly!
+
+-----
+
+© 2022 Poomklao Teerawatthanaprapha (A0245219E)
